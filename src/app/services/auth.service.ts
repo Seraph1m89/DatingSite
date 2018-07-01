@@ -53,8 +53,11 @@ export class AuthService {
       .catch(this.handleError);
   }
 
-  refreshToken(): any {
-    this.decodedToken = this.jwtHelper.decodeToken(localStorage.getItem('token'));
+  refreshToken(): void {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.decodedToken = this.jwtHelper.decodeToken(token);
+    }
   }
 
   private handleError(error: any) {
