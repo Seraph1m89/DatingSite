@@ -3,11 +3,11 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
 import { NavComponent } from './nav/nav.component';
 import { AuthService } from './services/auth.service';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
+import { HttpModule } from '@angular/http';
 
 @NgModule({
    declarations: [
@@ -18,7 +18,7 @@ import { RegisterComponent } from './register/register.component';
    ],
    imports: [
       BrowserModule,
-      HttpClientModule,
+      HttpModule,
       FormsModule
    ],
    providers: [
