@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using DatingApp.API.Data;
 using DatingApp.API.Dto;
@@ -23,9 +24,12 @@ namespace DatingApp.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterDto userForRegisterDto)
         {
-            userForRegisterDto.UserName = userForRegisterDto.UserName.ToLowerInvariant();
+            if (string.IsNullOrWhiteSpace(userForRegisterDto.UserName))
+            {
+                userForRegisterDto.UserName = userForRegisterDto.UserName.ToLowerInvariant();
+            }
 
-            if(await _authRepository.UserExist(userForRegisterDto.UserName))
+            if (await _authRepository.UserExist(userForRegisterDto.UserName))
             {
                 ModelState.AddModelError("UserName", "Username already exist");
             }
