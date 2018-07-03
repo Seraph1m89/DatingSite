@@ -1,3 +1,8 @@
 bin
 obj
 .vscode
+/.vs/DatingApp.API/v15/.suo
+/.vs/DatingApp.API/v15/Server/sqlite3/db.lock
+/.vs/DatingApp.API/v15/Server/sqlite3/storage.ide
+/.vs/DatingApp.API/v15/Server/sqlite3/storage.ide-shm
+/.vs/DatingApp.API/v15/Server/sqlite3/storage.ide-wal

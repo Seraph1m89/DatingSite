@@ -11,9 +11,12 @@ namespace DatingApp.API.Data
     public class AuthRepository : IAuthRepository
     {
         private readonly DataContext _context;
-        public AuthRepository(DataContext context)
+        private readonly IPasswordService _passwordService;
+
+        public AuthRepository(DataContext context, IPasswordService passwordService)
         {
             this._context = context;
+            _passwordService = passwordService;
         }
 
         public async Task<User> Login(string username, string password)
@@ -24,7 +27,7 @@ namespace DatingApp.API.Data
                 return null;
             }
 
-            if(!VerifyPassword(password, user.PasswordHash, user.Salt))
+            if(!_passwordService.VerifyPassword(password, user.PasswordHash, user.Salt))
             {
                 return null;
             }
@@ -32,33 +35,10 @@ namespace DatingApp.API.Data
             return user;
         }
 
-        private bool VerifyPassword(string password, byte[] passwordHash, byte[] salt)
-        {
-            using(var hmac = new HMACSHA512(salt))
-            {
-                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-
-                if(computedHash.Length != passwordHash.Length)
-                {
-                    return false;
-                }
-
-                for (int i = 0; i < computedHash.Length; i++)
-                {
-                    if(computedHash[i] != passwordHash[i])
-                    {
-                        return false;
-                    }
-                }
-            }
-            
-            return true;
-        }
-
         public async Task<User> Register(User user, string password)
         {
             byte[] passwordHash, passwordSalt;
-            CreatePasswordHash(password, out passwordHash, out passwordSalt);
+            _passwordService.CreatePasswordHash(password, out passwordHash, out passwordSalt);
             user.PasswordHash = passwordHash;
             user.Salt = passwordSalt;
 
@@ -71,15 +51,6 @@ namespace DatingApp.API.Data
         {
             var result = await _context.Users.AnyAsync(u => u.UserName == username);
             return result;
-        }
-
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            using(var hmac = new HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            }
         }
     }
 }
