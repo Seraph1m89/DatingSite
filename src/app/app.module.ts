@@ -11,12 +11,20 @@ import { HttpModule } from '@angular/http';
 
 import { AlertifyService } from './services/alertify.service';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { MemberListComponent } from './member-list/member-list.component';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { MemberListComponent } from './members/member-list/member-list.component';
 import { ListsComponent } from './lists/lists.component';
 import { MessagesComponent } from './messages/messages.component';
-import { RouterModule } from '@angular/router';
 import { AppRoutes } from './app-route.routing';
 import { AuthGuard } from './guards/auth.guard';
+import { ErrorHandlerService } from './services/error-handler.service';
+import { UserService } from './services/user.service';
+import { MemberCardComponent } from './members/member-card/member-card.component';
+import { AuthModule } from './auth/auth.module';
+import { MemberDetailComponent } from './members/member-detail/member-detail.component';
+import { MemberDetailResolver } from './resolvers/member-detail.resolver';
+import { MemberListResolver } from './resolvers/member-list.resolver';
+import { NgxGalleryModule } from 'ngx-gallery';
 
 @NgModule({
    declarations: [
@@ -26,19 +34,28 @@ import { AuthGuard } from './guards/auth.guard';
       RegisterComponent,
       MemberListComponent,
       ListsComponent,
-      MessagesComponent
+      MessagesComponent,
+      MemberCardComponent,
+      MemberDetailComponent
    ],
    imports: [
       BrowserModule,
       HttpModule,
       FormsModule,
       BsDropdownModule.forRoot(),
-      AppRoutes
+      TabsModule.forRoot(),
+      AppRoutes,
+      AuthModule,
+      NgxGalleryModule
    ],
    providers: [
       AuthService,
       AlertifyService,
-      AuthGuard
+      AuthGuard,
+      ErrorHandlerService,
+      UserService,
+      MemberDetailResolver,
+      MemberListResolver
    ],
    bootstrap: [
       AppComponent

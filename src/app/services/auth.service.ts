@@ -6,6 +6,7 @@ import 'rxjs/add/observable/throw';
 
 import { Observable } from 'rxjs/Observable';
 import { tokenNotExpired, JwtHelper } from 'angular2-jwt';
+import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +15,7 @@ export class AuthService {
   private decodedToken: any;
   private jwtHelper = new JwtHelper();
 
-  constructor(private http: Http) {}
+  constructor(private http: Http, private errorHandlerService: ErrorHandlerService) {}
 
   login(model: any) {
     const headers = new Headers({ 'Content-type': 'application/json' });
@@ -30,7 +31,7 @@ export class AuthService {
           this.userToken = data['token'];
         }
       })
-      .catch(this.handleError);
+      .catch(this.errorHandlerService.handleError);
   }
 
   getUserName() {
@@ -50,7 +51,7 @@ export class AuthService {
   register(model: any) {
     return this.http
       .post(`${this.baseUrl}/register`, model)
-      .catch(this.handleError);
+      .catch(this.errorHandlerService.handleError);
   }
 
   refreshToken(): void {
@@ -58,23 +59,5 @@ export class AuthService {
     if (token) {
       this.decodedToken = this.jwtHelper.decodeToken(token);
     }
-  }
-
-  private handleError(error: any) {
-    const applicatioError = error.headers.get('Application-Error');
-    if (applicatioError) {
-      return Observable.throw(applicatioError);
-    }
-    const serverError = error.json();
-    let modelStateErrors = '';
-    if (serverError) {
-      for (const key in serverError) {
-        if (serverError[key]) {
-          modelStateErrors += `${serverError[key]}\n`;
-        }
-      }
-    }
-
-    return Observable.throw(modelStateErrors || 'Server error');
   }
 }
