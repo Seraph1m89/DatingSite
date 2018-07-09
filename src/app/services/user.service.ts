@@ -23,4 +23,9 @@ export class UserService {
         .map((response: Response) => <User>response.json())
         .catch(this.errorHandlerService.handleError);
     }
+
+    updateUser(id: number, user: User) {
+        return this.authHttp.put(`${this.baseUrl}/users/${id}`, user)
+        .catch(this.errorHandlerService.handleError);
+    }
 }

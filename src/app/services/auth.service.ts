@@ -38,6 +38,10 @@ export class AuthService {
       return this.decodedToken && this.decodedToken['unique_name'] || null;
   }
 
+  getUserId(): number {
+    return this.decodedToken && this.decodedToken['nameid'] || 0;
+  }
+
   logout(): void {
     this.userToken = null;
     this.decodedToken = null;
