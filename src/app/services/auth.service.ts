@@ -34,6 +34,10 @@ export class AuthService {
       .catch(this.errorHandlerService.handleError);
   }
 
+  getToken() {
+    return localStorage.getItem('token');
+  }
+
   getUserName() {
       return this.decodedToken && this.decodedToken['unique_name'] || null;
   }

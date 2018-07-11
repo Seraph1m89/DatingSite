@@ -5,6 +5,7 @@ import { NgForm } from '@angular/forms';
 import { AlertifyService } from '../../services/alertify.service';
 import { ICanDeactivate } from '../../interfaces/can-deactivate.interface';
 import { UserService } from '../../services/user.service';
+import { Photo } from '../../models/photo';
 
 @Component({
   selector: 'app-member-edit',
@@ -27,6 +28,10 @@ export class MemberEditComponent implements OnInit, ICanDeactivate {
 
   canDeactivate() {
     return this.editForm.dirty;
+  }
+
+  onMainPhotoChanged(photo: Photo) {
+    this.user.mainPhotoUrl = photo.url;
   }
 
   updateUser() {
