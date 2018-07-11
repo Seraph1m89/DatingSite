@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Dto;
+using DatingApp.API.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,6 +48,7 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [CurrentUser(UserIdParameter = "id")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserForUpdateDto userDto)
         {
             if (!ModelState.IsValid)
@@ -54,18 +56,11 @@ namespace DatingApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
             var userFromRepo = await _repo.GetUser(id);
 
             if (userFromRepo == null)
             {
                 return NotFound($"Could not find user with ID {id}");
-            }
-
-            if (currentUserId != userFromRepo.Id)
-            {
-                return Unauthorized();
             }
 
             _mapper.Map(userDto, userFromRepo);

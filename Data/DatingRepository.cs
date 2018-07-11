@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +40,16 @@ namespace DatingApp.API.Data
         public async Task<IEnumerable<User>> GetUsers()
         {
             return await _context.Users.Include(u => u.Photos).ToListAsync();
+        }
+
+        public async Task<T> Get<T>(int id) where T: class
+        {
+            return await _context.Set<T>().FindAsync(id);
+        }
+
+        public async Task<IEnumerable<T>> FindBy<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            return await _context.Set<T>().Where(predicate).ToListAsync();
         }
     }
 }
