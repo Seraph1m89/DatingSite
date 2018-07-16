@@ -7,6 +7,7 @@ export class ErrorHandlerService {
   constructor() {}
 
   handleError(error: any) {
+    console.log(error);
     const applicatioError = error.headers.get('Application-Error');
     if (applicatioError) {
       return Observable.throw(applicatioError);

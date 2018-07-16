@@ -19,7 +19,6 @@ export class PhotoEditorComponent implements OnInit {
   hasBaseDropZoneOver = false;
   baseUrl = environment.apiUrl;
   currentMain: Photo;
-  @Output() mainPhotoChanged = new EventEmitter<Photo>();
 
   constructor(
     private authService: AuthService,
@@ -41,7 +40,7 @@ export class PhotoEditorComponent implements OnInit {
       this.currentMain = _.findWhere(this.photos, { isMain: true });
       this.currentMain.isMain = false;
       photo.isMain = true;
-      this.mainPhotoChanged.emit(photo);
+      this.authService.changeMainPhoto(photo.url);
     }, error => this.alertify.error(error));
   }
 

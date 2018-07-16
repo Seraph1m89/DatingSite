@@ -27,6 +27,9 @@
       </form>
 
       <ul class="nav navbar-nav navbar-right" *ngIf="isLoggedIn()">
+        <li>
+          <img [src]="photoUrl" alt="">
+        </li>
           <li class="dropdown" dropdown>
             <a (click)=false class="dropdown-toggle" dropdownToggle>Welcome {{getUserName() | titlecase}}<span class="caret"></span></a>
             <ul class="dropdown-menu" *dropdownMenu>
