@@ -34,4 +34,9 @@ export class UserService {
         return this.authHttp.put(`${this.baseUrl}/users/${this.authService.getUserId()}/photos/${id}/setMain`, {})
         .catch(this.errorHandlerService.handleError);
     }
+
+    deletePhoto(id: number) {
+        return this.authHttp.delete(`${this.baseUrl}/users/${this.authService.getUserId()}/photos/${id}`)
+        .catch(this.errorHandlerService.handleError);
+    }
 }

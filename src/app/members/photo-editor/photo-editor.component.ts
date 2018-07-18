@@ -44,6 +44,15 @@ export class PhotoEditorComponent implements OnInit {
     }, error => this.alertify.error(error));
   }
 
+  deletePhoto(photo: Photo) {
+    this.alertify.confirm('Are you sure you want to delete photo?', () => {
+      this.userService.deletePhoto(photo.id).subscribe(() => {
+        this.photos = _.filter(this.photos, p => p.id !== photo.id);
+        this.alertify.success('Successfuly deleted photo');
+      }, error => this.alertify.error(error));
+    });
+  }
+
   private onSuccessUpload(item, response, status, headers) {
     if (response) {
       const res: Photo = JSON.parse(response);
