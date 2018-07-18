@@ -48,7 +48,7 @@ namespace DatingApp.API
             services.AddScoped<IDatingRepository, DatingRepository>();
             services.AddAutoMapper();
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
-            services.AddSingleton<ICloudinaryFactory, CloudinaryFactory>();
+            services.AddSingleton<ICloudinaryService, CloudinaryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

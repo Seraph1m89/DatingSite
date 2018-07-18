@@ -7,18 +7,20 @@ using Microsoft.Extensions.Options;
 
 namespace DatingApp.API.Services
 {
-    public interface ICloudinaryFactory
+    public interface ICloudinaryService
     {
         Cloudinary GetCloudinary();
 
         ImageUploadResult UploadImage(IFormFile file);
+
+        DeletionResult DeleteImage(string publicId);
     }
 
-    class CloudinaryFactory : ICloudinaryFactory
+    class CloudinaryService : ICloudinaryService
     {
         private readonly IOptions<CloudinarySettings> _options;
 
-        public CloudinaryFactory(IOptions<CloudinarySettings> options)
+        public CloudinaryService(IOptions<CloudinarySettings> options)
         {
             _options = options;
         }
@@ -49,5 +51,11 @@ namespace DatingApp.API.Services
 
             return uploadResults;
         }
+
+        public DeletionResult DeleteImage(string publicId)
+        {
+			var deleteParams = new DeletionParams(publicId);
+	        return GetCloudinary().Destroy(deleteParams);
+		}
     }
 }
