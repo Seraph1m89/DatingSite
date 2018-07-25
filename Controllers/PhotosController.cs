@@ -111,38 +111,38 @@ namespace DatingApp.API.Controllers
             return BadRequest("Could not set photo as main");
         }
 
-	    [HttpDelete("{photoId}")]
-		[CurrentUser]
-	    public async Task<IActionResult> DeletePhoto(int userId, int photoId)
-	    {
-			var photoFromRepo = await _repository.Get<Photo>(photoId);
-		    if (photoFromRepo == null)
-		    {
-			    return NotFound("Could not find photo");
-		    }
+        [HttpDelete("{photoId}")]
+        [CurrentUser]
+        public async Task<IActionResult> DeletePhoto(int userId, int photoId)
+        {
+            var photoFromRepo = await _repository.Get<Photo>(photoId);
+            if (photoFromRepo == null)
+            {
+                return NotFound("Could not find photo");
+            }
 
-		    if (photoFromRepo.IsMain)
-		    {
-			    return BadRequest("You cannot delete the main photo");
-		    }
+            if (photoFromRepo.IsMain)
+            {
+                return BadRequest("You cannot delete the main photo");
+            }
 
-		    if (photoFromRepo.PublicId != null)
-		    {
-				var deleteResult = _cloudinaryService.DeleteImage(photoFromRepo.PublicId);
-			    if (deleteResult.Result == "ok")
-			    {
-				    _repository.Delete(photoFromRepo);
-			    }
-			}
-		    else
-		    {
-			    _repository.Delete(photoFromRepo);
-		    }
+            if (photoFromRepo.PublicId != null)
+            {
+                var deleteResult = _cloudinaryService.DeleteImage(photoFromRepo.PublicId);
+                if (deleteResult.Result == "ok")
+                {
+                    _repository.Delete(photoFromRepo);
+                }
+            }
+            else
+            {
+                _repository.Delete(photoFromRepo);
+            }
 
-		    if (await _repository.SaveAll())
-			    return Ok();
+            if (await _repository.SaveAll())
+                return Ok();
 
-		    return BadRequest("Failed to delete a photo");
-	    }
+            return BadRequest("Failed to delete a photo");
+        }
     }
 }

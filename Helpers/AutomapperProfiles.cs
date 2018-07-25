@@ -5,9 +5,9 @@ using DatingApp.API.Models;
 
 namespace DatingApp.API.Helpers
 {
-    public class AutomapperProfiles : Profile
+    public class AutoMapperProfiles : Profile
     {
-        public AutomapperProfiles()
+        public AutoMapperProfiles()
         {
             CreateMap<User, UserForListDto>()
                 .ForMember(dest => dest.MainPhotoUrl,
@@ -29,6 +29,7 @@ namespace DatingApp.API.Helpers
             CreateMap<UserForUpdateDto, User>();
             CreateMap<PhotoForCreationDto, Photo>();
             CreateMap<Photo, PhotoToReturnDto>();
+            CreateMap<UserRegisterDto, User>();
         }
     }
 }
