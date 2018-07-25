@@ -32,6 +32,7 @@ import { PhotoEditorComponent } from './members/photo-editor/photo-editor.compon
 import { FileUploadModule } from 'ng2-file-upload';
 import { ImageUploaderService } from './services/image-uploader.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { MomentModule } from 'ngx-moment';
 
 @NgModule({
    declarations: [
@@ -58,7 +59,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
       NgxGalleryModule,
       FileUploadModule,
       ReactiveFormsModule,
-      BsDatepickerModule.forRoot()
+      BsDatepickerModule.forRoot(),
+      MomentModule
    ],
    providers: [
       AuthService,

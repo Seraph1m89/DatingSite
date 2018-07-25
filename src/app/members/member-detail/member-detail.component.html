@@ -19,11 +19,11 @@
           </div>
           <div>
             <strong>Last active:</strong>
-            <p>{{user.lastActive}}</p>
+            <p>{{user.lastActive | amLocal | amTimeAgo }}</p>
           </div>
           <div>
             <strong>Registered:</strong>
-            <p>{{user.created}}</p>
+            <p>{{user.created | amLocal | date }}</p>
           </div>
         </div>
         <div class="panel-footer">
