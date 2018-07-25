@@ -27,7 +27,7 @@ namespace DatingApp.API.Services
                     new Claim(ClaimTypes.NameIdentifier, id.ToString()),
                     new Claim(ClaimTypes.Name, name)
                 }),
-                Expires = DateTime.UtcNow.AddDays(1),
+                Expires = DateTime.Now.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
             };
 

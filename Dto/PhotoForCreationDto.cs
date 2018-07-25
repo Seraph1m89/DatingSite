@@ -13,7 +13,7 @@ namespace DatingApp.API.Dto
 
         public string  Description { get; set; }
 
-        public DateTime DateAdded { get; set; } = DateTime.UtcNow;
+        public DateTime DateAdded { get; set; } = DateTime.Now;
 
         public string PublicId { get; set; }
     }

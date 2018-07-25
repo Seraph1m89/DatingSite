@@ -7,8 +7,8 @@ namespace DatingApp.API.Dto
     {
         public UserRegisterDto()
         {
-            LastActive = DateTime.UtcNow;
-            Created = DateTime.UtcNow;
+            LastActive = DateTime.Now;
+            Created = DateTime.Now;
         }
 
         [Required]
