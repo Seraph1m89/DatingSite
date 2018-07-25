@@ -28,7 +28,7 @@
 
       <ul class="nav navbar-nav navbar-right" *ngIf="isLoggedIn()">
         <li>
-          <img [src]="photoUrl" alt="">
+          <img [src]="photoUrl || '../../assets/user.png'" alt="">
         </li>
           <li class="dropdown" dropdown>
             <a (click)=false class="dropdown-toggle" dropdownToggle>Welcome {{getUserName() | titlecase}}<span class="caret"></span></a>

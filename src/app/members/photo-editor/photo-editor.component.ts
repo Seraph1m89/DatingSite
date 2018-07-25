@@ -37,10 +37,7 @@ export class PhotoEditorComponent implements OnInit {
 
   setMainPhoto(photo: Photo) {
     this.userService.setMainPhoto(photo.id).subscribe(() => {
-      this.currentMain = _.findWhere(this.photos, { isMain: true });
-      this.currentMain.isMain = false;
-      photo.isMain = true;
-      this.authService.changeMainPhoto(photo.url);
+      this.changeMainPhoto(photo);
     }, error => this.alertify.error(error));
   }
 
@@ -58,8 +55,17 @@ export class PhotoEditorComponent implements OnInit {
       const res: Photo = JSON.parse(response);
       const photo = {...res
       };
-
       this.photos.push(photo);
+      if (photo.isMain) {
+        this.changeMainPhoto(photo);
+      }
     }
+  }
+
+  private changeMainPhoto(photo: Photo) {
+    this.currentMain = _.findWhere(this.photos, { isMain: true });
+    this.currentMain.isMain = false;
+    photo.isMain = true;
+    this.authService.changeMainPhoto(photo.url);
   }
 }

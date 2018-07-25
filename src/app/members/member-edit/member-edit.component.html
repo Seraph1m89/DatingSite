@@ -15,7 +15,7 @@
     <div class="col-sm-4">
 
       <div class="panel panel-default">
-        <img [src]="user?.mainPhotoUrl" [alt]="user?.knownAs" class="profile-image thumbnail">
+        <img [src]="user?.mainPhotoUrl || '../../../assets/user.png'" [alt]="user?.knownAs" class="profile-image thumbnail">
         <div class="panel-body">
           <div>
             <strong>Location:</strong>

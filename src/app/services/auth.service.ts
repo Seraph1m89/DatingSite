@@ -70,9 +70,9 @@ export class AuthService {
     return tokenNotExpired('token');
   }
 
-  register(model: any) {
+  register(user: User) {
     return this.http
-      .post(`${this.baseUrl}/register`, model)
+      .post(`${this.baseUrl}/register`, user)
       .catch(this.errorHandlerService.handleError);
   }
 
