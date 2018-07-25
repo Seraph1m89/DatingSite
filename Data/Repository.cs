@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using DatingApp.API.Helpers;
 using DatingApp.API.Models;
 
 namespace DatingApp.API.Data
@@ -16,10 +17,10 @@ namespace DatingApp.API.Data
 
         Task<User> GetUser(int id);
 
-        Task<IEnumerable<User>> GetUsers();
-
         Task<T> Get<T>(int id) where T: class;
 
         Task<IEnumerable<T>> FindBy<T>(Expression<Func<T, bool>> predicate) where T : class;
+
+        Task<PagedList<User>> GetUsers(int pageNumber, int pageSize);
     }
 }
