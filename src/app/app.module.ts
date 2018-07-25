@@ -33,6 +33,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { ImageUploaderService } from './services/image-uploader.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { MomentModule } from 'ngx-moment';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @NgModule({
    declarations: [
@@ -60,7 +61,8 @@ import { MomentModule } from 'ngx-moment';
       FileUploadModule,
       ReactiveFormsModule,
       BsDatepickerModule.forRoot(),
-      MomentModule
+      MomentModule,
+      PaginationModule.forRoot()
    ],
    providers: [
       AuthService,
