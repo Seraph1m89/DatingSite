@@ -13,7 +13,8 @@ namespace DatingApp.API.Controllers
     [ServiceFilter(typeof(LogUserActivityFilter))]
     [Authorize]
     [Route("api/[controller]")]
-    public class UsersController : Controller
+    [ApiController]
+    public class UsersController : ControllerBase
     {
         private readonly IDatingRepository _repo;
         private readonly IMapper _mapper;
@@ -53,11 +54,6 @@ namespace DatingApp.API.Controllers
         [CurrentUser(UserIdParameter = "id")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserForUpdateDto userDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var userFromRepo = await _repo.GetUser(id);
 
             if (userFromRepo == null)

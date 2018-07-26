@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using CloudinaryDotNet.Actions;
 using DatingApp.API.Data;
 using DatingApp.API.Dto;
 using DatingApp.API.Helpers;
@@ -16,7 +13,8 @@ namespace DatingApp.API.Controllers
 {
     [Authorize]
     [Route("api/users/{userId}/photos")]
-    public class PhotosController : Controller
+    [ApiController]
+    public class PhotosController : ControllerBase
     {
         private readonly IDatingRepository _repository;
         private readonly IMapper _mapper;
@@ -44,13 +42,8 @@ namespace DatingApp.API.Controllers
 
         [HttpPost]
         [CurrentUser]
-        public async Task<IActionResult> AddPhotoForUser(int userId, PhotoForCreationDto photoDto)
+        public async Task<IActionResult> AddPhotoForUser(int userId, [FromForm] PhotoForCreationDto photoDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var user = await _repository.GetUser(userId);
             if (user == null)
             {
