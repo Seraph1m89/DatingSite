@@ -6,7 +6,6 @@ import { AuthService } from '../../services/auth.service';
 import { ImageUploaderService } from '../../services/image-uploader.service';
 import { UserService } from '../../services/user.service';
 import { AlertifyService } from '../../services/alertify.service';
-import * as _ from 'underscore';
 
 @Component({
   selector: 'app-photo-editor',
@@ -15,7 +14,7 @@ import * as _ from 'underscore';
 })
 export class PhotoEditorComponent implements OnInit {
   @Input() photos: Photo[];
-  uploader: FileUploader = new FileUploader({});
+  uploader: FileUploader;
   hasBaseDropZoneOver = false;
   baseUrl = environment.apiUrl;
   currentMain: Photo;
@@ -44,7 +43,7 @@ export class PhotoEditorComponent implements OnInit {
   deletePhoto(photo: Photo) {
     this.alertify.confirm('Are you sure you want to delete photo?', () => {
       this.userService.deletePhoto(photo.id).subscribe(() => {
-        this.photos = _.filter(this.photos, p => p.id !== photo.id);
+        this.photos = this.photos.filter(p => p.id !== photo.id);
         this.alertify.success('Successfuly deleted photo');
       }, error => this.alertify.error(error));
     });
@@ -63,7 +62,7 @@ export class PhotoEditorComponent implements OnInit {
   }
 
   private changeMainPhoto(photo: Photo) {
-    this.currentMain = _.findWhere(this.photos, { isMain: true });
+    this.currentMain = this.photos.filter(p => p.isMain)[0];
     this.currentMain.isMain = false;
     photo.isMain = true;
     this.authService.changeMainPhoto(photo.url);

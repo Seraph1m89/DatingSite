@@ -7,8 +7,7 @@ import { NavComponent } from './nav/nav.component';
 import { AuthService } from './services/auth.service';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
-import { HttpModule } from '@angular/http';
-
+import { JwtModule } from '@auth0/angular-jwt';
 import { AlertifyService } from './services/alertify.service';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -20,7 +19,6 @@ import { AuthGuard } from './guards/auth.guard';
 import { ErrorHandlerService } from './services/error-handler.service';
 import { UserService } from './services/user.service';
 import { MemberCardComponent } from './members/member-card/member-card.component';
-import { AuthModule } from './auth/auth.module';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberDetailResolver } from './resolvers/member-detail.resolver';
 import { MemberListResolver } from './resolvers/member-list.resolver';
@@ -34,6 +32,11 @@ import { ImageUploaderService } from './services/image-uploader.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { MomentModule } from 'ngx-moment';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { HttpClientModule } from '@angular/common/http';
+
+export function tokenGetter() {
+  return localStorage.getItem('token');
+}
 
 @NgModule({
    declarations: [
@@ -51,18 +54,24 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
    ],
    imports: [
       BrowserModule,
-      HttpModule,
+      HttpClientModule,
       FormsModule,
       BsDropdownModule.forRoot(),
       TabsModule.forRoot(),
       AppRoutes,
-      AuthModule,
       NgxGalleryModule,
       FileUploadModule,
       ReactiveFormsModule,
       BsDatepickerModule.forRoot(),
       MomentModule,
-      PaginationModule.forRoot()
+      PaginationModule.forRoot(),
+      JwtModule.forRoot({
+        config: {
+          tokenGetter,
+          whitelistedDomains: ['localhost:5000'],
+          blacklistedRoutes: ['localhost:5000/api/auth']
+        }
+      })
    ],
    providers: [
       AuthService,

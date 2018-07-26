@@ -5,9 +5,8 @@ import { NgForm } from '@angular/forms';
 import { AlertifyService } from '../../services/alertify.service';
 import { ICanDeactivate } from '../../interfaces/can-deactivate.interface';
 import { UserService } from '../../services/user.service';
-import { Photo } from '../../models/photo';
 import { AuthService } from '../../services/auth.service';
-import { Subscription } from '../../../../node_modules/rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-member-edit',

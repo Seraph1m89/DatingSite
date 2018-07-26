@@ -89,7 +89,7 @@ export class RegisterComponent implements OnInit {
 
   getValidationClass(fieldName: string) {
     return {
-      'has-error':
+      'is-invalid':
         this.registerForm.get(fieldName).errors &&
         this.registerForm.get(fieldName).touched
     };
