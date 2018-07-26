@@ -24,7 +24,7 @@ export class ImageUploaderService {
     ) => any
   ): FileUploader {
     const uploader = new FileUploader({
-      url: `${this.baseUrl}/users/${this.authService.getUserId()}/photos`,
+      url: `${this.baseUrl}users/${this.authService.getUserId()}/photos`,
       authToken: `Bearer ${this.authService.getToken()}`,
       isHTML5: true,
       allowedFileType: ['image'],
