@@ -114,6 +114,11 @@ namespace DatingApp.API.Controllers
                 return NotFound("Could not find photo");
             }
 
+            if (photoFromRepo.UserId != userId)
+            {
+                return Unauthorized();
+            }
+
             if (photoFromRepo.IsMain)
             {
                 return BadRequest("You cannot delete the main photo");
