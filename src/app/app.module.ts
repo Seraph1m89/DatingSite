@@ -16,7 +16,6 @@ import { ListsComponent } from './lists/lists.component';
 import { MessagesComponent } from './messages/messages.component';
 import { AppRoutes } from './app-route.routing';
 import { AuthGuard } from './guards/auth.guard';
-import { ErrorHandlerService } from './services/error-handler.service';
 import { UserService } from './services/user.service';
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
@@ -32,7 +31,8 @@ import { ImageUploaderService } from './services/image-uploader.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { MomentModule } from 'ngx-moment';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ErrorInterceptorProvider, ErrorInterceptor } from './services/error.interceptor.service';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -77,13 +77,13 @@ export function tokenGetter() {
       AuthService,
       AlertifyService,
       AuthGuard,
-      ErrorHandlerService,
       UserService,
       MemberDetailResolver,
       MemberListResolver,
       MemberEditResolver,
       PreventUnsavedChanged,
-      ImageUploaderService
+      ImageUploaderService,
+      {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
    ],
    bootstrap: [
       AppComponent

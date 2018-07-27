@@ -4,7 +4,6 @@ import { RequestOptions, Headers, Response, RequestOptionsArgs, URLSearchParams 
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from '../models/user';
-import { ErrorHandlerService } from './error-handler.service';
 import { AuthService } from './auth.service';
 import { PaginatedResult } from '../models/pagination';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
@@ -13,7 +12,7 @@ import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 export class UserService {
 
     baseUrl = environment.apiUrl;
-    constructor(private httpClient: HttpClient, private errorHandlerService: ErrorHandlerService, private authService: AuthService) { }
+    constructor(private httpClient: HttpClient, private authService: AuthService) { }
 
     getUsers(page?, itemsPerPage?): Observable<PaginatedResult<User[]>> {
 
