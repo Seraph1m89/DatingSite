@@ -21,6 +21,6 @@ namespace DatingApp.API.Data
 
         Task<IEnumerable<T>> FindBy<T>(Expression<Func<T, bool>> predicate) where T : class;
 
-        Task<PagedList<User>> GetUsers(int pageNumber, int pageSize);
+        Task<PagedList<User>> GetUsers(UserQueryParams userQueryParams);
     }
 }

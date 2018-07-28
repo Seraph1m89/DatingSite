@@ -66,6 +66,11 @@ export class AuthService {
       .post(`${this.baseUrl}register`, user);
   }
 
+  getCurrentUser() {
+    const freezedUser = Object.freeze(JSON.parse(localStorage.getItem('user')));
+    return freezedUser;
+  }
+
   refreshToken(): void {
     const token = localStorage.getItem('token');
     if (token) {

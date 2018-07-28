@@ -11,6 +11,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { AlertifyService } from './services/alertify.service';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { ButtonsModule } from 'ngx-bootstrap';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { ListsComponent } from './lists/lists.component';
 import { MessagesComponent } from './messages/messages.component';
@@ -32,7 +33,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { MomentModule } from 'ngx-moment';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ErrorInterceptorProvider, ErrorInterceptor } from './services/error.interceptor.service';
+import { ErrorInterceptor } from './services/error.interceptor.service';
+
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -71,7 +73,8 @@ export function tokenGetter() {
           whitelistedDomains: ['localhost:5000'],
           blacklistedRoutes: ['localhost:5000/api/auth']
         }
-      })
+      }),
+      ButtonsModule.forRoot()
    ],
    providers: [
       AuthService,

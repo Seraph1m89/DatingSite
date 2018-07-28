@@ -38,11 +38,27 @@ namespace DatingApp.API.Data
             return await _context.Users.Include(u => u.Photos).FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public async Task<PagedList<User>> GetUsers(int pageNumber, int pageSize)
+        public async Task<PagedList<User>> GetUsers(UserQueryParams userQueryParams)
         {
-            var results = _context.Users.Include(u => u.Photos);
+            var results = _context.Users.Include(u => u.Photos).Where(u => u.Id != userQueryParams.CurrentUserId && u.Gender == userQueryParams.Gender);
 
-            return await PagedList<User>.CreateAsync(results, pageNumber, pageSize);
+            var minDateOfBirth = DateTime.Today.AddYears(-userQueryParams.MaxAge - 1);
+            var maxDateOfBirth = DateTime.Today.AddYears(-userQueryParams.MinAge);
+            results = results.Where(u => u.DateOfBirth >= minDateOfBirth && u.DateOfBirth <= maxDateOfBirth);
+
+            if (!string.IsNullOrWhiteSpace(userQueryParams.OrderBy))
+            {
+                results = results.OrderByDescending(u =>
+                    userQueryParams.OrderBy.Equals("created", StringComparison.InvariantCultureIgnoreCase)
+                        ? u.Created
+                        : u.LastActive);
+            }
+            else
+            {
+                results = results.OrderByDescending(u => u.LastActive);
+            }
+
+            return await PagedList<User>.CreateAsync(results, userQueryParams.PageNumber, userQueryParams.PageSize);
         }
 
         public async Task<T> Get<T>(int id) where T: class

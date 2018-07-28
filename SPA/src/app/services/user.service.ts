@@ -14,13 +14,21 @@ export class UserService {
     baseUrl = environment.apiUrl;
     constructor(private httpClient: HttpClient, private authService: AuthService) { }
 
-    getUsers(page?, itemsPerPage?): Observable<PaginatedResult<User[]>> {
+    getUsers(page?, itemsPerPage?, userParams?): Observable<PaginatedResult<User[]>> {
 
         let params = new HttpParams();
 
         if (page != null && itemsPerPage != null) {
           params = params.append('pageNumber', page);
           params = params.append('pageSize', itemsPerPage);
+        }
+
+        if (userParams != null) {
+            for (const param in userParams) {
+                if (param) {
+                    params = params.append(param, userParams[param]);
+                }
+            }
         }
 
         const requestOptions = new RequestOptions();

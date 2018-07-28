@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -33,6 +34,11 @@ namespace DatingApp.API.Helpers
                 new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()};
             response.Headers.Add("Pagination", JsonConvert.SerializeObject(paginartionHeader, camelCaseFormatter));
             response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
+        }
+
+        public static int GetId(this ClaimsPrincipal user)
+        {
+            return int.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier));
         }
     }
 }
