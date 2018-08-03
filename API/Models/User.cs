@@ -8,6 +8,8 @@ namespace DatingApp.API.Models
         public User()
         {
             Photos = new HashSet<Photo>();
+            Likees = new HashSet<Like>();
+            Likers = new List<Like>();
         }
 
         public int Id { get; set; }
@@ -39,5 +41,9 @@ namespace DatingApp.API.Models
         public string Country { get; set; }
 
         public ICollection<Photo> Photos { get; set; }
+
+        public ICollection<Like> Likers { get; set; }
+
+        public ICollection<Like> Likees { get; set; }
     }
 }

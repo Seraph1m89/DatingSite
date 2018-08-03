@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { RequestOptions, Headers, Response, RequestOptionsArgs, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from '../models/user';
@@ -31,11 +30,6 @@ export class UserService {
             }
         }
 
-        const requestOptions = new RequestOptions();
-        requestOptions.params = new URLSearchParams();
-        requestOptions.params.append('pageNumber', page);
-        requestOptions.params.append('pageSize', itemsPerPage);
-
         return this.httpClient.get<User[]>(`${this.baseUrl}users`, { observe: 'response', params})
         .pipe(
             map((response) => {
@@ -63,5 +57,40 @@ export class UserService {
 
     deletePhoto(id: number) {
         return this.httpClient.delete(`${this.baseUrl}users/${this.authService.getUserId()}/photos/${id}`);
+    }
+
+    sendLike(id: number) {
+        return this.httpClient.post(`${this.baseUrl}users/${this.authService.getUserId()}/like/${id}`, {});
+    }
+
+    getLikes(page?, itemsPerPage?, likesQueryParams?) {
+        let params = new HttpParams();
+
+        if (page != null && itemsPerPage != null) {
+          params = params.append('pageNumber', page);
+          params = params.append('pageSize', itemsPerPage);
+        }
+
+        if (likesQueryParams != null) {
+            for (const param in likesQueryParams) {
+                if (param) {
+                    params = params.append(param, likesQueryParams[param]);
+                }
+            }
+        } else {
+            params = params.append('likees', 'true');
+        }
+
+        return this.httpClient.get<User[]>(`${this.baseUrl}users/getlikes`, { observe: 'response', params})
+        .pipe(
+            map((response) => {
+                const paginatedResult = new PaginatedResult<User[]>();
+                paginatedResult.results = response.body;
+                if (response.headers.get('Pagination') != null) {
+                    paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+                }
+                return paginatedResult;
+            })
+        );
     }
 }

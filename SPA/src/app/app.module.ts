@@ -34,6 +34,7 @@ import { MomentModule } from 'ngx-moment';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorInterceptor } from './services/error.interceptor.service';
+import { ListResolver } from './lists/list.resolver';
 
 
 export function tokenGetter() {
@@ -86,6 +87,7 @@ export function tokenGetter() {
       MemberEditResolver,
       PreventUnsavedChanged,
       ImageUploaderService,
+      ListResolver,
       {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
    ],
    bootstrap: [

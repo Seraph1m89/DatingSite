@@ -1,11 +1,9 @@
 ﻿namespace DatingApp.API.Helpers
 {
-    public class UserQueryParams
+    public class UserQueryParamsBase
     {
-        private const int MaxPageSize = 50;
-
         private int _pageSize = 10;
-
+        private const int MaxPageSize = 50;
         public int PageNumber { get; set; } = 1;
 
         public int PageSize
@@ -15,7 +13,10 @@
         }
 
         public int CurrentUserId { get; set; }
+    }
 
+    public class UserQueryParams : UserQueryParamsBase
+    {
         public string Gender { get; set; }
 
         public int MinAge { get; set; } = 18;
@@ -23,5 +24,12 @@
         public int MaxAge { get; set; } = 99;
 
         public string OrderBy { get; set; }
+    }
+
+    public class LikesQueryParams : UserQueryParamsBase
+    {
+        public bool Likees { get; set; }
+
+        public bool Likers { get; set; }
     }
 }
