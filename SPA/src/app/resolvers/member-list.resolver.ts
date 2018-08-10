@@ -5,7 +5,7 @@ import { UserService } from '../services/user.service';
 import { AlertifyService } from '../services/alertify.service';
 import { Observable, of } from 'rxjs';
 import { PaginatedResult } from '../models/pagination';
-import { catchError } from '../../../node_modules/rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class MemberListResolver implements Resolve<PaginatedResult<User[]>> {

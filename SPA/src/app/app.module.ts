@@ -35,6 +35,8 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorInterceptor } from './services/error.interceptor.service';
 import { ListResolver } from './lists/list.resolver';
+import { MessagesResolver } from './messages/messages.resolver';
+import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 
 
 export function tokenGetter() {
@@ -53,7 +55,8 @@ export function tokenGetter() {
       MemberCardComponent,
       MemberDetailComponent,
       MemberEditComponent,
-      PhotoEditorComponent
+      PhotoEditorComponent,
+      MemberMessagesComponent
    ],
    imports: [
       BrowserModule,
@@ -88,6 +91,7 @@ export function tokenGetter() {
       PreventUnsavedChanged,
       ImageUploaderService,
       ListResolver,
+      MessagesResolver,
       {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
    ],
    bootstrap: [

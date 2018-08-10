@@ -6,6 +6,8 @@ import { User } from '../models/user';
 import { AuthService } from './auth.service';
 import { PaginatedResult } from '../models/pagination';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
+import { Message } from '../models/message';
+import { TouchSequence } from '../../../node_modules/@types/selenium-webdriver';
 
 @Injectable()
 export class UserService {
@@ -92,5 +94,47 @@ export class UserService {
                 return paginatedResult;
             })
         );
+    }
+
+    getMessages(page?: number, pageSize?: number, messageContainer?: string): Observable<PaginatedResult<Message[]>> {
+        let params = new HttpParams();
+
+        if (page != null && pageSize != null) {
+            params = params.append('pageNumber', page.toString());
+            params = params.append('pageSize', pageSize.toString());
+        }
+        params = params.append('messageContainer', messageContainer);
+
+        return this.httpClient.get<Message[]>(`${this.baseUrl}users/${this.authService.getUserId()}/messages`,
+            { observe: 'response', params })
+            .pipe(
+                map(response => {
+                    const paginatedResult = new PaginatedResult<Message[]>();
+                    paginatedResult.results = response.body;
+                    if (response.headers.get('Pagination') != null) {
+                        paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+                    }
+
+                    return paginatedResult;
+                })
+            );
+    }
+
+    getMessageThread(recipientId: number) {
+        return this.httpClient.get<Message[]>(`${this.baseUrl}users/${this.authService.getUserId()}/messages/thread/${recipientId}`);
+    }
+
+    sendMessage(message: Message) {
+        message.senderId = this.authService.getUserId();
+        return this.httpClient.post<Message>(`${this.baseUrl}users/${this.authService.getUserId()}/messages`, message);
+    }
+
+    deleteMessage(messageId: number) {
+        return this.httpClient.post(`${this.baseUrl}users/${this.authService.getUserId()}/messages/${messageId}`, {});
+    }
+
+    markAsRead(messageId: number) {
+        return this.httpClient.post(`${this.baseUrl}users/${this.authService.getUserId()}/messages/${messageId}/read`, {})
+        .subscribe();
     }
 }

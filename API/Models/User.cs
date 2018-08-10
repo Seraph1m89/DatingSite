@@ -9,7 +9,9 @@ namespace DatingApp.API.Models
         {
             Photos = new HashSet<Photo>();
             Likees = new HashSet<Like>();
-            Likers = new List<Like>();
+            Likers = new HashSet<Like>();
+            MessagesRecieved = new HashSet<Message>();
+            MessagesSent = new HashSet<Message>();
         }
 
         public int Id { get; set; }
@@ -45,5 +47,9 @@ namespace DatingApp.API.Models
         public ICollection<Like> Likers { get; set; }
 
         public ICollection<Like> Likees { get; set; }
+
+        public ICollection<Message> MessagesSent { get; set; }
+
+        public ICollection<Message> MessagesRecieved { get; set; }
     }
 }

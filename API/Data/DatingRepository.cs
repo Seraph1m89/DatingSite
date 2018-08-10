@@ -101,6 +101,59 @@ namespace DatingApp.API.Data
             return await _context.Likes.FirstOrDefaultAsync(u => u.LikerId == userId && u.LikeeId == recepientId);
         }
 
+        public async Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId)
+        {
+            var messages = await getMessages().Where(m =>
+                IncludeRecipientMessage(userId, recipientId, m) ||
+                IncludeSenderMessage(userId, recipientId, m))
+                .OrderByDescending(m => m.MessageSent)
+                .ToListAsync();
+
+            return messages;
+        }
+
+        private static bool IncludeSenderMessage(int userId, int recipientId, Message m)
+        {
+            return m.RecipientId == recipientId && m.SenderId == userId && !m.SenderDeleted;
+        }
+
+        private static bool IncludeRecipientMessage(int userId, int recipientId, Message m)
+        {
+            return m.RecipientId == userId && m.SenderId == recipientId && !m.RecipientDeleted;
+        }
+
+        public async Task<PagedList<Message>> GetMessagesForUser(MessageQueryParams messageQueryParams)
+        {
+            var messages = getMessages();
+
+            switch (messageQueryParams.MessageContainer)
+            {
+                case "Inbox":
+                    messages = messages.Where(m =>
+                        m.RecipientId == messageQueryParams.CurrentUserId && !m.RecipientDeleted);
+                    break;
+                case "Outbox":
+                    messages = messages.Where(m => m.SenderId == messageQueryParams.CurrentUserId && !m.SenderDeleted);
+                    break;
+                default:
+                    messages = messages.Where(m => m.RecipientId == messageQueryParams.CurrentUserId
+                                                   && m.IsRead == false
+                                                   && !m.RecipientDeleted);
+                    break;
+            }
+
+            messages = messages.OrderByDescending(m => m.MessageSent);
+            return await PagedList<Message>.CreateAsync(messages, messageQueryParams.PageNumber, messageQueryParams.PageSize);
+        }
+
+        private IQueryable<Message> getMessages()
+        {
+            return _context.Messages
+                .Include(m => m.Sender).ThenInclude(u => u.Photos)
+                .Include(m => m.Recipient).ThenInclude(u => u.Photos)
+                .AsQueryable();
+        }
+
         public async Task<T> Get<T>(int id) where T: class
         {
             return await _context.Set<T>().FindAsync(id);

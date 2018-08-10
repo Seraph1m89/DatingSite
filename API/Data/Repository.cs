@@ -26,5 +26,14 @@ namespace DatingApp.API.Data
         Task<PagedList<User>> GetUsers(LikesQueryParams likesQueryParams);
 
         Task<Like> GetLike(int userId, int recepientId);
+
+        Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId);
+
+        Task<PagedList<Message>> GetMessagesForUser(MessageQueryParams messageQueryParams);
+    }
+
+    public class MessageQueryParams : UserQueryParamsBase
+    {
+        public string MessageContainer { get; set; } = "Unread";
     }
 }

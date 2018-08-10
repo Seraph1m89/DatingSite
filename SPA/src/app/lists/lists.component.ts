@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Pagination, PaginatedResult } from '../models/pagination';
 import { UserService } from '../services/user.service';
 import { User } from '../models/user';
-import { ActivatedRoute } from '../../../node_modules/@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-lists',

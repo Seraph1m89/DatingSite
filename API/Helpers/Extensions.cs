@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -10,7 +11,8 @@ namespace DatingApp.API.Helpers
     {
         public static void AddApplicationError(this HttpResponse response, string message)
         {
-            response.Headers.Add("Application-Error", message);
+            var asciiEncodedMessage = Convert.ToBase64String(Encoding.UTF8.GetBytes(message));
+            response.Headers.Add("Application-Error", asciiEncodedMessage);
             response.Headers.Add("Access-Control-Expose-Headers", "Application-Error");
             response.Headers.Add("Access-Control-Allow-Origin", "*");
         }
