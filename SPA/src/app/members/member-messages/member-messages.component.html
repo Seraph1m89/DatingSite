@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card-body">
-    <div *ngIf="messages.length === 0">
+    <div *ngIf="messages?.length === 0">
       <p>No messages yet... Say hi by using the message box bellow</p>
     </div>
     <ul class="chat">
@@ -8,7 +8,7 @@
         <!-- to them -->
         <div *ngIf="message.senderId === recipientId">
           <span class="chat-img float-left">
-            <img src="{{message.senderMainPhotoUrl}}" alt="{{message?.senderKnownAs}}" class="rounded-circle">
+            <img src="{{message?.senderMainPhotoUrl}}" alt="{{message?.senderKnownAs}}" class="rounded-circle">
           </span>
           <div class="chat-body">
             <div class="header">
@@ -23,14 +23,14 @@
         <!-- to me -->
         <div *ngIf="message.senderId !== recipientId">
           <span class="chat-img float-right">
-            <img src="{{message.senderMainPhotoUrl}}" alt="{{message?.senderKnownAs}}" class="rounded-circle">
+            <img src="{{message?.senderMainPhotoUrl}}" alt="{{message?.senderKnownAs}}" class="rounded-circle">
           </span>
           <div class="chat-body">
             <div class="header">
               <small class="text-muted">
                 <span class="fa fa-clock-o">{{message.messageSent | amLocal | amTimeAgo}}</span>
-                <span *ngIf="!message.isRead" class="text-danger">(unread)</span>
-                <span *ngIf="message.isRead" class="text-success">(read {{message.dateRead | amLocal | amTimeAgo}})</span>
+                <span *ngIf="!message?.isRead" class="text-danger">(unread)</span>
+                <span *ngIf="message?.isRead" class="text-success">(read {{message.dateRead | amLocal | amTimeAgo}})</span>
               </small>
               <strong class="primary-font float-right">{{message.senderKnownAs}}</strong>
             </div>

@@ -10,6 +10,7 @@ using DatingApp.API.Helpers;
 using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace DatingApp.API.Controllers
 {
@@ -21,11 +22,13 @@ namespace DatingApp.API.Controllers
     {
         private readonly IDatingRepository _repo;
         private readonly IMapper _mapper;
+        private readonly IHubContext<MessagesHub> _hubContext;
 
-        public MessagesController(IDatingRepository repo, IMapper mapper)
+        public MessagesController(IDatingRepository repo, IMapper mapper, IHubContext<MessagesHub> hubContext)
         {
             _repo = repo;
             _mapper = mapper;
+            _hubContext = hubContext;
         }
 
         [HttpGet("{id}", Name = "GetMessage")]
@@ -91,6 +94,8 @@ namespace DatingApp.API.Controllers
                 var returnMessage = _mapper.Map<MessageToReturnDto>(message);
                 returnMessage.SenderKnownAs = sender.KnownAs;
                 returnMessage.SenderMainPhotoUrl = sender.Photos.FirstOrDefault(p => p.IsMain)?.Url;
+                //await _hubContext.Clients.All.SendAsync("RecieveMessage", returnMessage);
+                await _hubContext.Clients.User(returnMessage.RecipientId.ToString()).SendAsync("RecieveMessage", returnMessage);
                 return CreatedAtRoute("GetMessage", new {id = message.Id}, returnMessage);
             }
 
