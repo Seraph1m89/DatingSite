@@ -1,7 +1,10 @@
+using System.Threading.Tasks;
+using DatingApp.API.Models;
+
 namespace DatingApp.API.Services
 {
     public interface ITokenService
     {
-        string GenerateToken(int id, string name);
+        Task<string> GenerateToken(User user);
     }
 }

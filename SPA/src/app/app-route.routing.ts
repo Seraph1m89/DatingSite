@@ -12,6 +12,7 @@ import { MemberEditResolver } from './resolvers/member-edit.resolver';
 import { PreventUnsavedChanged } from './guards/prevent-unsaved-changes.guard';
 import { ListResolver } from './lists/list.resolver';
 import { MessagesResolver } from './messages/messages.resolver';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -46,6 +47,11 @@ const appRoutes: Routes = [
         path: 'lists',
         component: ListsComponent,
         resolve: { users: ListResolver }
+      },
+      {
+        path: 'admin',
+        component: AdminPanelComponent,
+        data: { roles: ['Admin', 'Moderator']}
       }
     ]
   },

@@ -1,61 +1,65 @@
-using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using DatingApp.API.Data;
 using DatingApp.API.Dto;
 using DatingApp.API.Models;
 using DatingApp.API.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthRepository _authRepository;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public AuthController(IAuthRepository authRepository,
-                              ITokenService tokenService,
-                              IMapper mapper)
+        public AuthController(ITokenService tokenService,
+                              IMapper mapper,
+                              UserManager<User> userManager,
+                              SignInManager<User> signInManager)
         {
-            _authRepository = authRepository;
             _tokenService = tokenService;
             _mapper = mapper;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterDto userForRegisterDto)
         {
-            userForRegisterDto.UserName = userForRegisterDto.UserName.ToLowerInvariant();
-
-            if (await _authRepository.UserExist(userForRegisterDto.UserName))
+            var userToCreate = _mapper.Map<User>(userForRegisterDto);
+            var result = await _userManager.CreateAsync(userToCreate, userForRegisterDto.Password);
+            var userToReturn = _mapper.Map<UserDetailsDto>(userToCreate);
+            if (result.Succeeded)
             {
-                ModelState.AddModelError("UserName", "Username already exist");
+                return CreatedAtRoute("GetUser", new { contoller = "Users", id = userToReturn.Id }, userToReturn);
             }
 
-            var userToCreate = _mapper.Map<User>(userForRegisterDto);
-            var createdUser = await _authRepository.Register(userToCreate, userForRegisterDto.Password);
-            var userToReturn = _mapper.Map<UserDetailsDto>(createdUser);
-            return CreatedAtRoute("GetUser", new { contoller = "Users", id = userToReturn.Id}, userToReturn);
+            return BadRequest(result.Errors);
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserLoginDto userLoginDto)
         {
-            var dbUser = await _authRepository.Login(userLoginDto.UserName.ToLowerInvariant(), userLoginDto.Password);
+            var dbUser = await _userManager.FindByNameAsync(userLoginDto.UserName);
+            var result = await _signInManager.CheckPasswordSignInAsync(dbUser, userLoginDto.Password, false);
 
-            if(dbUser == null)
-            {
+            if (!result.Succeeded)
                 return Unauthorized();
-            }
 
-            var user = _mapper.Map<UserForListDto>(dbUser);
+            var appUser = await _userManager.Users.Include(p => p.Photos)
+                .FirstOrDefaultAsync(u => u.NormalizedUserName == userLoginDto.UserName.ToUpper());
+            var userToReturn = _mapper.Map<UserForListDto>(appUser);
+            var token = await _tokenService.GenerateToken(dbUser);
 
-            var token = _tokenService.GenerateToken(dbUser.Id, dbUser.UserName);
-            return Ok(new {token, user});
+            return Ok(new {token, user = userToReturn});
         }
     }
 }

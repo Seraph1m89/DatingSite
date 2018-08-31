@@ -1,42 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using DatingApp.API.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 
 namespace DatingApp.API.Data
 {
     public class Seed
     {
-        private readonly DataContext _context;
-        private readonly IPasswordService _passwordService;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
 
-        public Seed(DataContext context, IPasswordService passwordService)
+        public Seed(UserManager<User> userManager, RoleManager<Role> roleManager)
         {
-            _context = context;
-            _passwordService = passwordService;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public void SeedUsers()
         {
-            _context.RemoveRange(_context.Users);
-            _context.SaveChanges();
-
-            var userData = File.ReadAllText("Data/UserSeedData.json");
-            var users = JsonConvert.DeserializeObject<List<User>>(userData);
-            foreach (var user in users)
+            if (!_userManager.Users.Any())
             {
-                _passwordService.CreatePasswordHash("password", out var passwordHash, out var salt);
-                user.PasswordHash = passwordHash;
-                user.Salt = salt;
-                user.UserName = user.UserName.ToLower();
+                var userData = File.ReadAllText("Data/UserSeedData.json");
+                var users = JsonConvert.DeserializeObject<List<User>>(userData);
 
-                _context.Add(user);
+                var roles = new List<Role>
+                {
+                    new Role {Name = "Member"},
+                    new Role {Name = "Admin"},
+                    new Role {Name = "Moderator"}
+                };
+
+                foreach (var role in roles)
+                {
+                    _roleManager.CreateAsync(role).Wait();
+                }
+
+                foreach (var user in users)
+                {
+                    _userManager.CreateAsync(user, "password").Wait();
+                    _userManager.AddToRoleAsync(user, "Member").Wait();
+                }
+
+                var adminUser = new User
+                {
+                    UserName = "Admin"
+                };
+
+                var result = _userManager.CreateAsync(adminUser, "password").Result;
+                if (result.Succeeded)
+                {
+                    var admin = _userManager.FindByNameAsync("Admin").Result;
+                    _userManager.AddToRolesAsync(admin, new[] {"Admin", "Moderator"}).Wait();
+                }
             }
-
-            _context.SaveChanges();
         }
     }
 }

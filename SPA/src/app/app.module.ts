@@ -11,7 +11,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { AlertifyService } from './services/alertify.service';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
-import { ButtonsModule } from 'ngx-bootstrap';
+import { ButtonsModule, ModalModule } from 'ngx-bootstrap';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { ListsComponent } from './lists/lists.component';
 import { MessagesComponent } from './messages/messages.component';
@@ -37,6 +37,12 @@ import { ErrorInterceptor } from './services/error.interceptor.service';
 import { ListResolver } from './lists/list.resolver';
 import { MessagesResolver } from './messages/messages.resolver';
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { HasRoleDirective } from './directives/hasRole.directive';
+import { UserManagmentComponent } from './admin/user-managment/user-managment.component';
+import { PhotoManagmentComponent } from './admin/photo-managment/photo-managment.component';
+import { AdminService } from './services/admin.service';
+import { RolesModalComponent } from './admin/roles-modal/roles-modal.component';
 
 
 export function tokenGetter() {
@@ -56,7 +62,12 @@ export function tokenGetter() {
       MemberDetailComponent,
       MemberEditComponent,
       PhotoEditorComponent,
-      MemberMessagesComponent
+      MemberMessagesComponent,
+      AdminPanelComponent,
+      HasRoleDirective,
+      UserManagmentComponent,
+      PhotoManagmentComponent,
+      RolesModalComponent
    ],
    imports: [
       BrowserModule,
@@ -78,7 +89,8 @@ export function tokenGetter() {
           blacklistedRoutes: ['localhost:5000/api/auth']
         }
       }),
-      ButtonsModule.forRoot()
+      ButtonsModule.forRoot(),
+      ModalModule.forRoot()
    ],
    providers: [
       AuthService,
@@ -92,7 +104,11 @@ export function tokenGetter() {
       ImageUploaderService,
       ListResolver,
       MessagesResolver,
-      {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
+      {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
+      AdminService
+   ],
+   entryComponents: [
+     RolesModalComponent
    ],
    bootstrap: [
       AppComponent

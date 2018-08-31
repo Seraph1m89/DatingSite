@@ -8,6 +8,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
+
   private baseUrl = environment.apiUrl + 'auth/';
   private decodedToken: any;
   private photoUrl = new BehaviorSubject<string>('../../assets/user.png');
@@ -80,5 +81,22 @@ export class AuthService {
     if (user) {
       this.changeMainPhoto(user.mainPhotoUrl);
     }
+  }
+
+  isRoleMatch(allowedRoles): boolean {
+    let isMatch = false;
+    const userRoles = this.decodedToken.role as Array<string>;
+    allowedRoles.forEach(element => {
+      if (userRoles.includes(element)) {
+        isMatch = true;
+        return;
+      }
+    });
+
+    return isMatch;
+  }
+
+  getRoles() {
+    return this.decodedToken.role as Array<string>;
   }
 }
